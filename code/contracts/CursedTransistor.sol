@@ -19,7 +19,7 @@ contract CursedTransistor is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable
     uint256 public constant maxEarlyMint = 1024;        // Max Early adopters
     uint256 public constant earlyAdoptPrice = 1 ether;  // Early adopted price
     uint256 public constant royaltiesPercentage = 5;    // Percentage of each sale to pay as royalties
-
+    uint256 public constant specialPrefix = 1 << 64;    // Prefix for Special emissions
 
     // Properties
     uint256 public maxMint = 1024;                      // Max mintable transistors. This can be increased in the future by setMaxMint
@@ -29,14 +29,18 @@ contract CursedTransistor is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable
     // Address of deposit for minting
     address payable public depositAddress = payable(0x08589a0F5FCF62001d59cC671F4fD042548bE138);
 
+    // Address for base API
+    string private _baseUrl;
+
     event SpecialEmitted(address recipient, uint256 tokenId);
 
-    constructor() ERC721("CursedTransistor", "CURTRX") {
+    constructor(string memory baseUrl) ERC721("CursedTransistor", "CURTRX") {
       _royaltiesReceiver = depositAddress; // Set deposit address as royality default
+      _baseUrl = baseUrl;
     }
 
-    function _baseURI() internal pure override returns (string memory) {
-        return "https://cursedtransistor.lucasteske.dev/api/transistor/";
+    function _baseURI() internal view override returns (string memory) {
+        return _baseUrl;
     }
 
     function setDepositAddress(address payable to) public onlyOwner {
@@ -53,9 +57,8 @@ contract CursedTransistor is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable
 
     function commonSupply() public view returns(uint256) {
       uint256 earlyAdopter = _earlyAdopterCounter.current();
-      uint256 special = _specialCounter.current();
       uint256 count = _tokenIds.current();
-      return count - earlyAdopter - special;
+      return count - earlyAdopter;
     }
 
     function specialSupply() public view returns(uint256) {
@@ -92,7 +95,8 @@ contract CursedTransistor is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable
     // For events, flags and livestream airdrops
     function sendSpecial(address to) public onlyOwner returns(uint256) {
       _specialCounter.increment();
-      uint256 id = claimNormal(to);
+      uint256 id = specialPrefix + _specialCounter.current();
+      _safeMint(to, id);
       emit SpecialEmitted(to, id);
       return id;
     }

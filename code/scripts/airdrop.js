@@ -4,8 +4,6 @@ async function main() {
    const FantomKittens = await ethers.getContractFactory("FantomKittens");
    const kitten = await FantomKittens.attach(process.env.KITTEN_CONTRACT)
 
-   console.log(kitten);
-
    const kittenOwners =[];
    const totalSupply = await kitten.totalSupply();
    console.log(`Total supply of ${totalSupply} kittens`);
@@ -25,8 +23,8 @@ async function main() {
 
    const CursedTransistors = await ethers.getContractFactory("CursedTransistor");
    const cursed = await CursedTransistors.attach(process.env.CURSED_CONTRACT)
-   await cursed.airdrop(kittenOwners);
-   console.log(cursed)
+   const tx = await cursed.airdrop(kittenOwners);
+   await tx.wait();
 }
 
 main()

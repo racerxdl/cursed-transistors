@@ -9,4 +9,7 @@ module.exports = {
    networks: {
       hardhat: {},
    },
+   mocha: {
+      timeout: 120000
+   }
 }
