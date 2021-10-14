@@ -27,6 +27,7 @@ export const useContractMethods = () => {
   const [totalSupply, setTotalSupply] = React.useState<undefined | number>();
   const [commonSupply, setCommonSupply] = React.useState<undefined | number>();
   const [earlySupply, setEarlySupply] = React.useState<undefined | number>();
+  const [specialSupply, setSpecialSupply] = React.useState<undefined | number>();
   const [tokenArrayContentData, setTokenArrayContentData] = React.useState<undefined | any>()
 
   const wallet = useWallet();
@@ -46,7 +47,7 @@ export const useContractMethods = () => {
 
   const getTokenURIs = async (tokenIds: string[]): Promise<any[]> => Promise.all(tokenIds.map(getTokenURI))
 
-  const getTokenData = async ({uri, idx}: any) : Promise<any|null> => {
+  const getTokenData = async ({uri, idx}: any): Promise<any | null> => {
     try {
       const res = await fetch(uri)
       if (res === null) {
@@ -109,11 +110,18 @@ export const useContractMethods = () => {
       .call()
       .then((supply: string) => setEarlySupply(Number(supply)));
 
+  const getSpecialSupply = () =>
+    contract.current?.methods
+      .specialSupply()
+      .call()
+      .then((supply: string) => setSpecialSupply(Number(supply)));
+
   return {
     claim,
     getTotalSupply, totalSupply,
     getCommonSupply, commonSupply,
     getEarlyAdopterSupply, earlySupply,
+    getSpecialSupply, specialSupply,
     listFromWallet,
     tokenArrayContentData
   };

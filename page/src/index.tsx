@@ -7,9 +7,7 @@ import { UseWalletProvider } from 'use-wallet'
 
 ReactDOM.render(
   <React.StrictMode>
-    <UseWalletProvider
-      connectors={{}}
-    >
+    <UseWalletProvider connectors={{}}>
     <App />
     </UseWalletProvider>
   </React.StrictMode>,
