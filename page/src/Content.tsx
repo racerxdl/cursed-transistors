@@ -1,16 +1,13 @@
 import * as React from 'react';
-import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
-import Grid from '@mui/material/Grid';
-import Button from '@mui/material/Button';
 import {makeStyles} from "@material-ui/core/styles";
 import {useWallet} from "use-wallet";
-import ImageList from '@mui/material/ImageList';
-import ImageListItem from '@mui/material/ImageListItem';
-import ImageListItemBar from '@mui/material/ImageListItemBar';
 
 import {useContractMethods} from "./Web3";
-import { ButtonGroup } from '@mui/material';
+import {
+  ButtonGroup, Paper, Button,
+  ImageList, ImageListItem, ImageListItemBar,
+} from '@mui/material';
+import ProjectInfo from "./ProjectInfo";
 
 const useStyles = makeStyles({
   rightContent: {
@@ -29,22 +26,28 @@ export default function Content() {
   const {
     claim,
     listFromWallet,
-    tokenArrayContentData
+    tokenArrayContentData,
+    getEarlyAdopterSupply, earlySupply,
   } = useContractMethods()
   let content;
   let transistorList;
 
   if (wallet.status === "connected") {
+    getEarlyAdopterSupply()
+    const claimButtonMessage = (earlySupply || 0) > 1024 ? "Claim for 1.6 FTM" : "Claim Early for 1 FTM";
     content = (
-      <div className={classes.rightContent}>
-        <ButtonGroup variant="contained" orientation="vertical" aria-label="outlined primary button group" style={{width: '100%'}}>
-          <Button onClick={claim}>Claim</Button> <br/>
+      <div>
+        <ButtonGroup variant="contained" orientation="horizontal" aria-label="outlined primary button group">
+          <Button onClick={claim}>{claimButtonMessage}</Button> <br/>
           <Button onClick={() => listFromWallet(wallet.account || '', 0, 1024)}>List my transistors</Button>
+          <Button
+            onClick={() => window.open(`https://paintswap.finance/marketplace/collections/${process.env.REACT_APP_CURSED_CONTRACT}`)}>Collection
+            in Paintswap</Button>
         </ButtonGroup>
       </div>)
     if (tokenArrayContentData?.length > 0) {
       transistorList = (
-        <div >
+        <div>
           <h1>Your Transistors</h1>
           <ImageList sx={{height: 450}} cols={4} rowHeight={224}>
             {tokenArrayContentData?.map((item: any) => (
@@ -75,46 +78,21 @@ export default function Content() {
     }
   } else {
     content = <div className={classes.rightContent}>
-        Connect a wallet to mint or manage Cursed Transistors
+      Connect a wallet to mint or manage Cursed Transistors
     </div>
     transistorList = <div/>
   }
 
   return (
-    <Paper sx={{maxWidth: 936, margin: 'auto', marginTop: '40px', padding: '16px'}}>
-      <Grid container spacing={2}>
-        <Grid item xs={6}>
-          <div>
-            <Typography align="justify">
-              <b>2048 NFT Cursed Transistors</b> are now released from the Teske's Lab cage to the Fantom Network Wilderness!
-              This is the website where you can claim yours and list every cursed transistor you have. We have two batches
-              of 1024 transistors each. The first are the <b>Early Adopter</b> batch, in which 419 will be airdropped to
-              Fantom Kitten (check <a href="https://twitter.com/FakewormsStudio">FakeWorms Studio</a> twitter for news),
-              the other will be claimed here for <b>1 FTM</b> each. After the 1024 batch of Early Adopters end, there will be a
-              batch of 1024 common transistors to be claimed for <b>1.6 FTM</b> each.<br/><br/>
-
-              If you missed the first 2048 batches you might still get one in my livestreams! There will be special emissions
-              with custom messages for public events, workshops and livestreams I attend.
-              <br/>
-              <br/>
-              Keep posted in my <a href="https://twitter.com/lucasteske">Twitter</a> and/or <a href="https://twitch.tv/racerxdl">TwitchTV</a> for news!
-              <br/>
-
-              <a href="https://discord.gg/WmyrjCrZyR">Join our discord</a> to interact with the Fantom Kittens community and Cursed Transistors community!
-              <br/>
-              <br/>
-
-              If you are new to the Fantom ecossystem, FakeWorms studio written a <a href="https://gist.github.com/MarcoWorms/78e71064e3a5c366b29b8a9ce01e1f19">small guide</a> on how to setup yourself to interact with Fantom services.
-              <br/>Explore, buy, and sell all claimed kittens at <a href={`https://paintswap.finance/marketplace/collections/${process.env.REACT_APP_CURSED_CONTRACT}`}>PaintSwap NFT Market</a>
-
-            </Typography>
-          </div>
-        </Grid>
-        <Grid item xs={6}>
+    <div>
+      <img alt="Cursed Transistor Showcase" src="/transistorheader.png" height="256"/>
+      <Paper sx={{maxWidth: 936, margin: 'auto', marginTop: '40px', padding: '2vh', paddingTop: '2vh'}}>
+        <div>
           {content}
-        </Grid>
-      </Grid>
-      {transistorList}
-    </Paper>
+        </div>
+        <ProjectInfo/>
+        {transistorList}
+      </Paper>
+    </div>
   );
 }
