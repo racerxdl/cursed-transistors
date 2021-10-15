@@ -55,6 +55,10 @@ contract CursedTransistor is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable
         maxMint = amount;
     }
 
+    function setTokenURI(uint256 tokenId, string memory newURI) public onlyOwner {
+        _setTokenURI(tokenId, newURI);
+    }
+
     function commonSupply() public view returns(uint256) {
       uint256 earlyAdopter = _earlyAdopterCounter.current();
       uint256 count = _tokenIds.current();
