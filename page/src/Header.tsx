@@ -30,22 +30,22 @@ export default function Header() {
       <div>
         <Grid container spacing={1} alignItems="center">
           <Grid item>
-            <Tooltip title="Early Adopter Minted Transistors" >
-              <Badge badgeContent={earlySupply} color={(earlySupply||0) >= 1024 ? "error" : "info"}>
+            <Tooltip title="Early Adopter Minted Transistors">
+              <Badge badgeContent={earlySupply} color={(earlySupply||0) >= 1024 ? "error" : "info"} max={1024} showZero>
                 <img width={48} alt="Early Adopter Icon" src="/earlyAdopterIcon.png"/>
               </Badge>
             </Tooltip>
           </Grid>
           <Grid item>
             <Tooltip title="Common Minted Transistors">
-              <Badge badgeContent={commonSupply} color={(commonSupply||0) >= 1024 ? "error" : "info"}>
+              <Badge badgeContent={commonSupply} color={(commonSupply||0) >= 1024 ? "error" : "info"} max={1024} showZero>
                 <img width={48} alt="Common Icon" src="/commonIcon.png"/>
               </Badge>
             </Tooltip>
           </Grid>
           <Grid item>
             <Tooltip title="Special Minted Transistors">
-              <Badge badgeContent={specialSupply} color="info">
+              <Badge badgeContent={specialSupply} color="info" max={1024} showZero>
                 <img width={48} alt="Special Icon" src="/specialIcon.png"/>
               </Badge>
             </Tooltip>

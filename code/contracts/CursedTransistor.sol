@@ -6,9 +6,9 @@ import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
-import "../interfaces/IERC2981.sol";
+import "@openzeppelin/contracts/interfaces/IERC2981.sol";
 
-contract CursedTransistor is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable {
+contract CursedTransistor is ERC721, ERC721Enumerable, ERC721URIStorage, IERC2981, Ownable {
     using Counters for Counters.Counter;
 
     Counters.Counter private _earlyAdopterCounter;      // Number of early adopters
@@ -135,11 +135,11 @@ contract CursedTransistor is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable
 
     /// @notice Called with the sale price to determine how much royalty
     //          is owed and to whom.
-    /// @param _tokenId - the NFT asset queried for royalty information
+    ///         param _tokenId - the NFT asset queried for royalty information (not used)
     /// @param _salePrice - sale price of the NFT asset specified by _tokenId
     /// @return receiver - address of who should be sent the royalty payment
     /// @return royaltyAmount - the royalty payment amount for _value sale price
-    function royaltyInfo(uint256 _tokenId, uint256 _salePrice) external view returns (address receiver, uint256 royaltyAmount) {
+    function royaltyInfo(uint256, uint256 _salePrice) external view override(IERC2981) returns (address receiver, uint256 royaltyAmount) {
         uint256 _royalties = (_salePrice * royaltiesPercentage) / 100;
         return (_royaltiesReceiver, _royalties);
     }
@@ -168,9 +168,9 @@ contract CursedTransistor is ERC721, ERC721Enumerable, ERC721URIStorage, Ownable
     function supportsInterface(bytes4 interfaceId)
         public
         view
-        override(ERC721, ERC721Enumerable)
+        override(ERC721, ERC721Enumerable, IERC165)
         returns (bool)
     {
-        return interfaceId == type(IERC2981).interfaceId || super.supportsInterface(interfaceId);
+        return type(IERC2981).interfaceId == interfaceId || super.supportsInterface(interfaceId);
     }
 }

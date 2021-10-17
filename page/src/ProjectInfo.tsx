@@ -50,7 +50,7 @@ export default function ProjectInfo() {
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
           <Tab label="Story" {...a11yProps(0)} />
           <Tab label="Project" {...a11yProps(1)} />
-          <Tab label="Help" {...a11yProps(2)} />
+          <Tab label="Help me!" {...a11yProps(2)} />
         </Tabs>
       </Box>
       <TabPanel value={value} index={0}>
@@ -113,7 +113,7 @@ export default function ProjectInfo() {
           <p>Even if you missed the first 2048 batch, you might still get one in Teske's Lab livestreams or events.
             Keep posted in my <a href="https://twitter.com/lucasteske">Twitter</a> and/or <a href="https://twitch.tv/racerxdl">TwitchTV</a> for news!</p>
           <p><a href="https://discord.gg/WmyrjCrZyR">Join our discord</a> to interact with the Fantom Kittens community and Cursed Transistors community!</p>
-          <p>Explore, buy, and sell all claimed kittens at <a href={`https://paintswap.finance/marketplace/collections/${process.env.REACT_APP_CURSED_CONTRACT}`}>PaintSwap NFT Market</a></p>
+          <p>Explore, buy, and sell all claimed cursed transistors at <a href={`https://paintswap.finance/marketplace/collections/${process.env.REACT_APP_CURSED_CONTRACT}`}>PaintSwap NFT Market</a></p>
         </Typography>
       </TabPanel>
     </Box>

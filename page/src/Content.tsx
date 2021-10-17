@@ -6,6 +6,7 @@ import {useContractMethods} from "./Web3";
 import {
   ButtonGroup, Paper, Button,
   ImageList, ImageListItem, ImageListItemBar,
+  LinearProgress,
 } from '@mui/material';
 import ProjectInfo from "./ProjectInfo";
 
@@ -28,13 +29,16 @@ export default function Content() {
     listFromWallet,
     tokenArrayContentData,
     getEarlyAdopterSupply, earlySupply,
+    loading,
   } = useContractMethods()
   let content;
   let transistorList;
 
+  const loadingBar = loading ? <LinearProgress /> : <div/>
+
   if (wallet.status === "connected") {
     getEarlyAdopterSupply()
-    const claimButtonMessage = (earlySupply || 0) > 1024 ? "Claim for 1.6 FTM" : "Claim Early for 1 FTM";
+    const claimButtonMessage = (earlySupply || 0) >= 1024 ? "Claim for 1.6 FTM" : "Claim Early for 1 FTM";
     content = (
       <div>
         <ButtonGroup variant="contained" orientation="horizontal" aria-label="outlined primary button group">
@@ -44,6 +48,9 @@ export default function Content() {
             onClick={() => window.open(`https://paintswap.finance/marketplace/collections/${process.env.REACT_APP_CURSED_CONTRACT}`)}>Collection
             in Paintswap</Button>
         </ButtonGroup>
+        <br/>
+        <br/>
+        {loadingBar}
       </div>)
     if (tokenArrayContentData?.length > 0) {
       transistorList = (

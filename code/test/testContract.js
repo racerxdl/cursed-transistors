@@ -1,4 +1,4 @@
-const { expect } = require("chai"); 
+const { expect } = require("chai");
 
 describe("Cursed Transistors contract", function () {
   let owner;
@@ -116,5 +116,14 @@ describe("Cursed Transistors contract", function () {
     })
     const tx = await contract.sendSpecial(addr);
     await p;
+  })
+
+  it("Expect ERC721 interfaces to be implemented", async() => {
+    const Cursed = await ethers.getContractFactory("CursedTransistor");
+    const hardhatCursed = await Cursed.deploy("http://test");
+    let supported = await hardhatCursed.supportsInterface(0x5b5e139f);  // ERC721Metadata
+    expect(supported).to.equal(true);
+    supported = await hardhatCursed.supportsInterface(0xDEADBEEF); // No interface
+    expect(supported).to.equal(false);
   })
 });

@@ -29,6 +29,7 @@ export const useContractMethods = () => {
   const [earlySupply, setEarlySupply] = React.useState<undefined | number>();
   const [specialSupply, setSpecialSupply] = React.useState<undefined | number>();
   const [tokenArrayContentData, setTokenArrayContentData] = React.useState<undefined | any>()
+  const [loading, setLoading] = React.useState<undefined|boolean>()
 
   const wallet = useWallet();
 
@@ -79,6 +80,7 @@ export const useContractMethods = () => {
     if (earlies >= maxEarlySupply) {
       price = commonSupplyPrice;
     }
+    setLoading(true)
     const tx = await contract.current.methods.claim().send({
       from: wallet?.account as string,
       value: price,
@@ -88,7 +90,7 @@ export const useContractMethods = () => {
     getCommonSupply()
     getEarlyAdopterSupply()
     await listFromWallet(wallet.account || '', 0, 1024)
-
+    setLoading(false)
     return tx
   };
 
@@ -123,6 +125,7 @@ export const useContractMethods = () => {
     getEarlyAdopterSupply, earlySupply,
     getSpecialSupply, specialSupply,
     listFromWallet,
-    tokenArrayContentData
+    tokenArrayContentData,
+    loading
   };
 };
