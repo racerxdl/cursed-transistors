@@ -11,7 +11,7 @@ import (
 	"math/rand"
 )
 
-func generateN(n int, special, earlyAdopter bool, specialMessage, baseUrl string) (*image.RGBA, *nftMeta) {
+func generateN(n int, special, earlyAdopter bool, specialMessage, baseUrl string) (*image.RGBA, *NFTMeta) {
 	reseed()
 
 	// Shuffle color list
@@ -67,7 +67,7 @@ func generateN(n int, special, earlyAdopter bool, specialMessage, baseUrl string
 
 	// Fill NFT Metadata
 	name := fmt.Sprintf("%s %s", trVariants[transistor][variant], trNames[transistor])
-	nftData := &nftMeta{}
+	nftData := &NFTMeta{}
 	nftData.Name = name
 	nftData.Attributes = attrs
 	nftData.BaseColor = fmt.Sprintf("#%02x%02x%02x", bgBase.R, bgBase.G, bgBase.B)

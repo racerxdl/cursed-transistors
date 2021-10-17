@@ -11,8 +11,8 @@ const baseUrl = "https://cursed-transistors.lucasteske.dev"
 // BaseURL for testnet environment
 const baseTestNetURL = "https://cursed-transistors-test.lucasteske.dev"
 
-// nftMeta represents the Cursed Transistor NFT JSON Metadata
-type nftMeta struct {
+// NFTMeta represents the Cursed Transistor NFT JSON Metadata
+type NFTMeta struct {
 	// ERC721Metadata Fields
 	Name        string `json:"name"`
 	Description string `json:"description"`
@@ -28,7 +28,7 @@ type nftMeta struct {
 	Variant        string         `json:"variant"`                   // Transistor Variant
 }
 
-func saveMetadata(data nftMeta, filename string) error {
+func saveMetadata(data NFTMeta, filename string) error {
 	f, err := os.Create(filename)
 	if err != nil {
 		return err
