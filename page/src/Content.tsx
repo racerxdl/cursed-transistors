@@ -29,6 +29,7 @@ export default function Content() {
     listFromWallet,
     tokenArrayContentData,
     getEarlyAdopterSupply, earlySupply,
+    commonSupply, getCommonSupply,
     loading,
   } = useContractMethods()
   let content;
@@ -38,15 +39,18 @@ export default function Content() {
 
   if (wallet.status === "connected") {
     getEarlyAdopterSupply()
+    getCommonSupply()
+    const claimAvailable = (commonSupply||0) < 1024;
     const claimButtonMessage = (earlySupply || 0) >= 1024 ? "Claim for 1.6 FTM" : "Claim Early for 1 FTM";
+    const claimButton = claimAvailable ? <Button onClick={claim}>{claimButtonMessage}</Button> : <Button disabled>No more available</Button>
     content = (
       <div>
         <ButtonGroup variant="contained" orientation="horizontal" aria-label="outlined primary button group">
-          <Button onClick={claim}>{claimButtonMessage}</Button> <br/>
+          {claimButton}<br/>
           <Button onClick={() => listFromWallet(wallet.account || '', 0, 1024)}>List my transistors</Button>
           <Button
-            onClick={() => window.open(`https://paintswap.finance/marketplace/collections/${process.env.REACT_APP_CURSED_CONTRACT}`)}>Collection
-            in Paintswap</Button>
+            onClick={() => window.open(`https://paintswap.finance/marketplace/collections/${process.env.REACT_APP_CURSED_CONTRACT}`)}
+          >Collection in Paintswap</Button>
         </ButtonGroup>
         <br/>
         <br/>

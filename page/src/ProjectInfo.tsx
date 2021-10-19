@@ -70,11 +70,11 @@ export default function ProjectInfo() {
           <p>The Cursed Transistor project was created by Lucas Teske after the incentive of his friends from <a href="https://twitter.com/FakewormsStudio">FakeWorms Studio</a>.
           </p>
           <p>There will be a first 1024 "early adopter" transistors batch with a golden
-            frame around it where 419 of them will be airdroped for Fantom Kitten owners and
-            the remaining 605 can be claimed for 1 FTM each. <b>There will never be any more than 1024 Golden Frame Cursed Transistors around</b></p>
+            frame around that can be claimed for 1 FTM each. <b>There will never be any more than 1024 Golden Frame Cursed Transistors around</b></p>
           <p>After the first batch of 1024 cursed transistors is claimed, another batch of "common" cursed transistors will be available for 1.6 FTM each.</p>
           <p>If you missed both batches, you might still be able to earn one in Teske's Lab livestreams, events and raffles.
             These are minted as Special NFT with a Silver Frame around it and a message of what caused the NFT to be minted. Stay tuned!</p>
+          <p>There will be an airdrop for all kitten owners of a Special Minted cursed transistor with a custom message for the kitten :D - Stay tuned in our discord!</p>
           <hr/>
           <p>
             <p>There are 4 types of transistors, each with two variants:</p>
