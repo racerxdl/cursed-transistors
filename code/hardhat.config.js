@@ -8,6 +8,9 @@ module.exports = {
    defaultNetwork: "localhost",
    networks: {
       hardhat: {},
+      mainnet: {
+         url: 'https://rpc.ftm.tools',
+      },
    },
    mocha: {
       timeout: 120000
