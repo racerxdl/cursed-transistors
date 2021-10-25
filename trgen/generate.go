@@ -11,7 +11,7 @@ import (
 	"math/rand"
 )
 
-func generateN(n int, special, earlyAdopter bool, specialMessage, baseUrl string) (*image.RGBA, *NFTMeta) {
+func generateN(n string, special, earlyAdopter bool, specialMessage, baseUrl string) (*image.RGBA, *NFTMeta) {
 	reseed()
 
 	// Shuffle color list
@@ -31,6 +31,19 @@ func generateN(n int, special, earlyAdopter bool, specialMessage, baseUrl string
 	for i := 0; i < 4; i++ {
 		attrs[i] = trAttrs[transistor][i]
 		v := randFloatRange(attrs[i].Range[0], attrs[i].Range[1])
+		if special {
+			if attrs[i].Unit == "ns" {
+				v *= 0.8
+			} else {
+				v *= 1.2
+			}
+		}
+		if v > attrs[i].Range[1] {
+			v = attrs[i].Range[1]
+		}
+		if v < attrs[i].Range[0] {
+			v = attrs[i].Range[0]
+		}
 		attrs[i].Value = roundCases(v, attrs[i].Decimals)
 	}
 	// Copy bases
@@ -80,11 +93,12 @@ func generateN(n int, special, earlyAdopter bool, specialMessage, baseUrl string
 		fmtStr := "\n%s: %." + decimals + "f %s"
 		nftData.Description += fmt.Sprintf(fmtStr, v.Name, v.Value, v.Unit)
 	}
-	nftData.Image = fmt.Sprintf("%s/img/trx/%d.jpg", baseUrl, n)
+	nftData.Image = fmt.Sprintf("%s/img/trx/%s.jpg", baseUrl, n)
 
 	if special {
 		nftData.Special = true
 		nftData.SpecialMessage = &specialMessage
+		nftData.Description += "\n\n" + specialMessage
 	}
 	nftData.EarlyAdopter = earlyAdopter
 

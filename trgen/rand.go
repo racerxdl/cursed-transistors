@@ -58,6 +58,12 @@ func reseed() {
 	rand.Seed(baseSeed)
 }
 
+func shuffleStringSlice(data []string) {
+	rand.Shuffle(len(data), func(i, j int) {
+		data[i], data[j] = data[j], data[i]
+	})
+}
+
 func init() {
 	reseed()
 }

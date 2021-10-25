@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"github.com/holiman/uint256"
 	"os"
 )
 
@@ -10,6 +11,8 @@ const baseUrl = "https://cursed-transistors.lucasteske.dev"
 
 // BaseURL for testnet environment
 const baseTestNetURL = "https://cursed-transistors-test.lucasteske.dev"
+
+var specialIDPrefix, _ = uint256.FromHex("0x10000000000000000")
 
 // NFTMeta represents the Cursed Transistor NFT JSON Metadata
 type NFTMeta struct {
