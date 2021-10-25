@@ -1,13 +1,13 @@
 import * as React from 'react';
-import {makeStyles} from "@material-ui/core/styles";
 import {useWallet} from "use-wallet";
-
+import web3 from 'web3';
 import {useContractMethods} from "./Web3";
 import {
   ButtonGroup, Paper, Button,
   ImageList, ImageListItem, ImageListItemBar,
   LinearProgress,
 } from '@mui/material';
+import {makeStyles} from '@mui/styles';
 import ProjectInfo from "./ProjectInfo";
 
 const useStyles = makeStyles({
@@ -20,6 +20,8 @@ const useStyles = makeStyles({
     padding: "10px",
   }
 });
+
+const specialStartID = web3.utils.toBN('0x10000000000000000')
 
 export default function Content() {
   const classes = useStyles();
@@ -35,14 +37,15 @@ export default function Content() {
   let content;
   let transistorList;
 
-  const loadingBar = loading ? <LinearProgress /> : <div/>
+  const loadingBar = loading ? <LinearProgress/> : <div/>
 
   if (wallet.status === "connected") {
     getEarlyAdopterSupply()
     getCommonSupply()
-    const claimAvailable = (commonSupply||0) < 1024;
+    const claimAvailable = (commonSupply || 0) < 1024;
     const claimButtonMessage = (earlySupply || 0) >= 1024 ? "Claim for 1.6 FTM" : "Claim Early for 1 FTM";
-    const claimButton = claimAvailable ? <Button onClick={claim}>{claimButtonMessage}</Button> : <Button disabled>No more available</Button>
+    const claimButton = claimAvailable ? <Button onClick={claim}>{claimButtonMessage}</Button> :
+      <Button disabled>No more available</Button>
     content = (
       <div>
         <ButtonGroup variant="contained" orientation="horizontal" aria-label="outlined primary button group">
@@ -61,8 +64,9 @@ export default function Content() {
         <div>
           <h1>Your Transistors</h1>
           <ImageList sx={{height: 450}} cols={4} rowHeight={224}>
-            {tokenArrayContentData?.map((item: any) => (
-              <ImageListItem
+            {tokenArrayContentData?.map((item: any) => {
+              const idx = item.special ? `S${web3.utils.toBN(item.idx).sub(specialStartID).toString()}` : item.idx;
+              return <ImageListItem
                 key={item.image}
                 onClick={() => window.open(`https://paintswap.finance/marketplace/assets/${process.env.REACT_APP_CURSED_CONTRACT}/${item.idx}`)}
                 style={{cursor: 'pointer'}}
@@ -75,12 +79,12 @@ export default function Content() {
                 />
 
                 <ImageListItemBar
-                  title={`${item.name} #${item.idx}`}
+                  title={`${item.name} #${idx}`}
                   position="below"
                   style={{width: '192px'}}
                 />
               </ImageListItem>
-            ))}
+            })}
           </ImageList>
         </div>
       )

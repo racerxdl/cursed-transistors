@@ -29,7 +29,7 @@ export const useContractMethods = () => {
   const [earlySupply, setEarlySupply] = React.useState<undefined | number>();
   const [specialSupply, setSpecialSupply] = React.useState<undefined | number>();
   const [tokenArrayContentData, setTokenArrayContentData] = React.useState<undefined | any>()
-  const [loading, setLoading] = React.useState<undefined|boolean>()
+  const [loading, setLoading] = React.useState<undefined | boolean>()
 
   const wallet = useWallet();
 
@@ -69,8 +69,13 @@ export const useContractMethods = () => {
       const endStop = !end || end > ownerBalance ? ownerBalance : end;
       const tokens = await tokensRangeFromWallet(wallet, start, endStop)
       const tokenData = await getTokenURIs(tokens)
-      const tokenContent = await Promise.all(tokenData.map(getTokenData))
-      return setTokenArrayContentData(tokenContent.filter(o => o !== null));
+      const tokenContent = (await Promise.all(tokenData.map(getTokenData))).filter(o => o !== null);
+      tokenContent.forEach((tkn: any) => {
+        tkn.special = (tkn.attributes||[])
+          .map((attr: any) => attr.trait_type === 'Special' && attr.value === 'yes')
+          .reduce((a: boolean, b: boolean) => a || b, false)
+      })
+      return setTokenArrayContentData(tokenContent);
     }
   }
 
