@@ -1,6 +1,7 @@
 import React from "react";
 import Web3 from "web3";
 import {useWallet} from "use-wallet";
+import {getTokenData} from "./api/api";
 import cursedTransistor from "./artifacts/CursedTransistor.json";
 
 export const earlySupplyPrice = 1.0e18;
@@ -48,20 +49,6 @@ export const useContractMethods = () => {
 
   const getTokenURIs = async (tokenIds: string[]): Promise<any[]> => Promise.all(tokenIds.map(getTokenURI))
 
-  const getTokenData = async ({uri, idx}: any): Promise<any | null> => {
-    try {
-      const res = await fetch(uri)
-      if (res === null) {
-        return null
-      }
-      const data = await res.json();
-      data.idx = idx;
-      return data
-    } catch (e) {
-      console.log(e);
-      return null
-    }
-  }
 
   const listFromWallet = async (wallet: string, start: number = 0, end: number | void) => {
     const ownerBalance = await contract.current?.methods.balanceOf(wallet).call().then((supply: string) => Number(supply));
@@ -71,7 +58,7 @@ export const useContractMethods = () => {
       const tokenData = await getTokenURIs(tokens)
       const tokenContent = (await Promise.all(tokenData.map(getTokenData))).filter(o => o !== null);
       tokenContent.forEach((tkn: any) => {
-        tkn.special = (tkn.attributes||[])
+        tkn.special = (tkn.attributes || [])
           .map((attr: any) => attr.trait_type === 'Special' && attr.value === 'yes')
           .reduce((a: boolean, b: boolean) => a || b, false)
       })
