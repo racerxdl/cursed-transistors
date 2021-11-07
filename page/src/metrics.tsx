@@ -9,5 +9,5 @@ export default function Metrics() {
     .append('p')
     .text("Hello world")
 
-  return <div ref={metricRef}></div>
+  return <div ref={metricRef}/>
 }

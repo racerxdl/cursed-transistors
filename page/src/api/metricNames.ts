@@ -14,7 +14,7 @@ const metricUnit: { [key: string]: string } = {
   "vmax_histogram": "V"
 }
 
-const metricToTransistorAttr : { [key: string]: string } = {
+const metricToTransistorAttr: { [key: string]: string } = {
   "imax_histogram": "Imax",
   "rdson_histogram": "RDS(on)",
   "t_histogram": "t",
@@ -22,8 +22,17 @@ const metricToTransistorAttr : { [key: string]: string } = {
   "vmax_histogram": "Vmax"
 }
 
+const transistorAttrToMetric: { [key: string]: string } = {
+  "Imax": "imax_histogram",
+  "RDS(on)": "rdson_histogram",
+  "t": "t_histogram",
+  "Vce(on)": "vceon_histogram",
+  "Vmax": "vmax_histogram"
+}
+
 export {
   metricName,
   metricUnit,
   metricToTransistorAttr,
+  transistorAttrToMetric,
 }
