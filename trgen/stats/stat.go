@@ -75,27 +75,27 @@ var (
 		"vmax": prometheus.NewHistogramVec(prometheus.HistogramOpts{
 			Name:    "vmax_histogram",
 			Help:    "Max Voltage Histogram",
-			Buckets: prometheus.LinearBuckets(1, 50, 48),
+			Buckets: prometheus.LinearBuckets(1, 10, 240),
 		}, []string{"type"}),
 		"imax": prometheus.NewHistogramVec(prometheus.HistogramOpts{
 			Name:    "imax_histogram",
 			Help:    "Max Current Histogram",
-			Buckets: prometheus.LinearBuckets(1, 10, 40),
+			Buckets: prometheus.LinearBuckets(1, 1, 400),
 		}, []string{"type"}),
 		"t": prometheus.NewHistogramVec(prometheus.HistogramOpts{
 			Name:    "t_histogram",
 			Help:    "Transition Time Histogram",
-			Buckets: prometheus.LinearBuckets(1, 300, 40),
+			Buckets: prometheus.LinearBuckets(1, 10, 1400),
 		}, []string{"type"}),
 		"vce(on)": prometheus.NewHistogramVec(prometheus.HistogramOpts{
 			Name:    "vceon_histogram",
 			Help:    "Collector-Emitter (on) Voltage Histogram",
-			Buckets: prometheus.LinearBuckets(1, 0.25, 40),
+			Buckets: prometheus.LinearBuckets(1, 0.01, 200),
 		}, []string{"type"}),
 		"rds(on)": prometheus.NewHistogramVec(prometheus.HistogramOpts{
 			Name:    "rdson_histogram",
 			Help:    "Drain-Source resistance (on) Histogram",
-			Buckets: prometheus.LinearBuckets(1, 0.1, 40),
+			Buckets: prometheus.LinearBuckets(0.000001, 0.01, 400),
 		}, []string{"type"}),
 	}
 )

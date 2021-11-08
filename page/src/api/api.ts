@@ -5,8 +5,7 @@ const apiUrl = process.env.REACT_APP_API_URL;
 
 const TYPE_COUNTER = 'COUNTER'
 const TYPE_HISTOGRAM = 'HISTOGRAM'
-const HISTOGRAM_DECIMATION = 3
-const HISTOGRAM_MIN_BUCKET_TO_DECIMATE = 16
+const HISTOGRAM_DECIMATE_TO_N = 8
 const SPECIAL_START_ID = web3.utils.toBN('0x10000000000000000')
 
 const getTokenData = async ({uri, idx}: any): Promise<any | null> => {
@@ -138,11 +137,13 @@ const decimateHistogram = (buckets: StringMap): StringMap => {
     .map((k) => ({ok: k, k: parseFloat(k), v: buckets[k]}))
     .sort((a, b) => (a.k - b.k))
 
-  if (orderedBucket.length < HISTOGRAM_MIN_BUCKET_TO_DECIMATE) {
+  if (orderedBucket.length < HISTOGRAM_DECIMATE_TO_N) {
     return buckets
   }
 
-  for (let i = 0; i < orderedBucket.length - HISTOGRAM_DECIMATION; i += HISTOGRAM_DECIMATION) {
+  const decimation = (orderedBucket.length / HISTOGRAM_DECIMATE_TO_N) >>> 0;
+
+  for (let i = 0; i < orderedBucket.length - decimation; i += decimation) {
     const b = orderedBucket[i];
     result[b.ok] = b.v
   }
@@ -271,9 +272,8 @@ const transistorRarity = (t: TransistorData, m: ParsedMetric) => {
 export {
   TYPE_COUNTER,
   TYPE_HISTOGRAM,
-  HISTOGRAM_DECIMATION,
   SPECIAL_START_ID,
-  HISTOGRAM_MIN_BUCKET_TO_DECIMATE,
+  HISTOGRAM_DECIMATE_TO_N,
   getTokenData,
   getTransistorData,
   getMetrics,
