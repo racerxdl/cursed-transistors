@@ -14,7 +14,6 @@ import {
 } from "@mui/material";
 import * as React from "react";
 import web3 from "web3";
-import StarBorderPurple500Icon from '@mui/icons-material/StarBorderPurple500';
 
 import Histogram from "./graphs/histogram";
 import paintSwapLogo from './logos/paintswap.png'

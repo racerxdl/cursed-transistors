@@ -41,9 +41,15 @@ export default function Content() {
   const history = useHistory()
 
   if (wallet.status === "connected") {
-    getEarlyAdopterSupply()
-    getCommonSupply()
-    listFromWallet(wallet.account || '', 0, 1024)
+    if (!earlySupply) {
+      getEarlyAdopterSupply()
+    }
+    if (!commonSupply) {
+      getCommonSupply()
+    }
+    if (!tokenArrayContentData) {
+      listFromWallet(wallet.account || '', 0, 1024)
+    }
     const claimAvailable = (commonSupply || 0) < 1024;
     const claimButtonMessage = (earlySupply || 0) >= 1024 ? "Claim for 1.6 FTM" : "Claim Early for 1 FTM";
     const claimButton = claimAvailable ? <Button onClick={claim}>{claimButtonMessage}</Button> :
