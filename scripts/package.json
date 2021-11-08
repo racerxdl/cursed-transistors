@@ -1,0 +1,22 @@
+{
+  "name": "scripts",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "typescript": "^4.4.4"
+  },
+  "dependencies": {
+    "@types/node": "^16.11.6",
+    "dotenv": "^10.0.0",
+    "node-fetch": "^3.0.0",
+    "node-fetch-commonjs": "^3.0.3",
+    "web-vitals": "^1.0.1",
+    "web3": "^1.6.0"
+  }
+}
