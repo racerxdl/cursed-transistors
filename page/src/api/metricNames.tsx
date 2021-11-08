@@ -1,3 +1,10 @@
+import BatteryChargingFullIcon from '@mui/icons-material/BatteryChargingFull';
+import AccessTimeIcon from '@mui/icons-material/AccessTime';
+import BatterySaverIcon from '@mui/icons-material/BatterySaver';
+import StarBorderPurple500Icon from "@mui/icons-material/StarBorderPurple500";
+import WaterIcon from '@mui/icons-material/Water';
+import * as React from "react";
+
 const metricName: { [key: string]: string } = {
   "imax_histogram": "I (max)",
   "rdson_histogram": "RDS (on)",
@@ -11,7 +18,8 @@ const metricUnit: { [key: string]: string } = {
   "rdson_histogram": "Ω",
   "t_histogram": "ns",
   "vceon_histogram": "V",
-  "vmax_histogram": "V"
+  "vmax_histogram": "V",
+  "Rarity Score": "Points"
 }
 
 const metricToTransistorAttr: { [key: string]: string } = {
@@ -30,9 +38,19 @@ const transistorAttrToMetric: { [key: string]: string } = {
   "Vmax": "vmax_histogram"
 }
 
+const metricToIcon: { [key: string]: any } = {
+  "vmax_histogram": (<BatteryChargingFullIcon/>),
+  "t": (<AccessTimeIcon/>),
+  "rdson_histogram": "Ω",
+  "vceon_histogram": (<BatterySaverIcon/>),
+  "Rarity Score": (<StarBorderPurple500Icon/>),
+  "imax_histogram": (<WaterIcon/>)
+}
+
 export {
   metricName,
   metricUnit,
+  metricToIcon,
   metricToTransistorAttr,
   transistorAttrToMetric,
 }

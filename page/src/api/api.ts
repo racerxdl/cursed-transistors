@@ -229,7 +229,8 @@ const getHistMetric = (type: string, histogram?: HistogramData): HistogramMetric
 
 const transistorRarity = (t: TransistorData, m: ParsedMetric) => {
   const type = transistorType(t)
-  return t.ct_attributes.map((attr) => {
+  let score = 0;
+  const attrRarities = t.ct_attributes.map((attr) => {
     const metricName = transistorAttrToMetric[attr.Name]
     const attrRarity = {
       metricName,
@@ -264,9 +265,23 @@ const transistorRarity = (t: TransistorData, m: ParsedMetric) => {
     attrRarity.count = (bucket?.v || 0)
     attrRarity.rate = 100 * (attrRarity.count / parseFloat(hist?.count || '1'))
     attrRarity.totalCount = parseFloat(hist?.count || '0')
-
+    score += 100 - attrRarity.rate;
     return attrRarity
   })
+
+  return [
+    {
+      metricName: 'Rarity Score',
+      attrName: 'Rarity Score',
+      rate: -1,
+      count: -1,
+      totalCount: -1,
+      unit: '',
+      value: score,
+    },
+    ...attrRarities,
+  ]
+
 }
 
 export {

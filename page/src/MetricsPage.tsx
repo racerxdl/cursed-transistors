@@ -1,8 +1,20 @@
 import {useParams} from 'react-router'
 import {useEffect, useState} from "react";
-import {Avatar, Box, Card, CardContent, Grid, List, ListItem, ListItemAvatar, ListItemText} from "@mui/material";
+import {
+  Avatar, Backdrop,
+  Box,
+  Card,
+  CardContent,
+  CircularProgress,
+  Grid,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText
+} from "@mui/material";
 import * as React from "react";
 import web3 from "web3";
+import StarBorderPurple500Icon from '@mui/icons-material/StarBorderPurple500';
 
 import Histogram from "./graphs/histogram";
 import paintSwapLogo from './logos/paintswap.png'
@@ -15,7 +27,7 @@ import {
   transistorRarity,
   transistorType
 } from "./api/api";
-import {metricName, metricToTransistorAttr, metricUnit} from "./api/metricNames";
+import {metricName, metricToIcon, metricToTransistorAttr, metricUnit} from "./api/metricNames";
 import {toNotationUnit} from "./tools";
 
 const markWithTransistor = (m: HistogramData, hm: HistogramMetric, transistorData: TransistorData | null) => {
@@ -39,7 +51,7 @@ const markWithTransistor = (m: HistogramData, hm: HistogramMetric, transistorDat
             buckets: decimateHistogram(hm.buckets)
           }}
           width={420}
-          height={206}
+          height={220}
           mark={mark}
           xLabel={metricUnit[m.name]}
         />
@@ -78,16 +90,17 @@ export default function MetricsPage({metrics}: { metrics?: Array<Metric> }) {
     const rarityList = rarityData.map((m) => {
       const [v, u] = toNotationUnit(m.value);
       const svalue = m.unit !== 'ns' ? `${v} ${u}${metricUnit[m.metricName]}` : `${m.value} ${m.unit}`
+      const avatar = metricToIcon[m.metricName]
+      const secondary = metricUnit[m.metricName] === 'Points' ? '' : `(${m.count}/${m.totalCount}) ${Math.round(m.rate * 100) / 100} %`
+
       return (
         <ListItem>
           <ListItemAvatar>
-            <Avatar>
-              {m.unit}
-            </Avatar>
+            <Avatar>{avatar}</Avatar>
           </ListItemAvatar>
           <ListItemText primaryTypographyProps={{style: {color: 'white'}}}
                         primary={`${m.attrName} = ${svalue}`}
-                        secondary={`(${m.count}/${m.totalCount}) ${Math.round(m.rate * 100) / 100} %`}
+                        secondary={secondary}
           />
         </ListItem>
       )
@@ -129,6 +142,26 @@ export default function MetricsPage({metrics}: { metrics?: Array<Metric> }) {
         </Grid>
         <Grid item xs/>
       </Grid>
+    )
+  }
+
+  if (id && (!transistorData || !metrics)) {
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        maxWidth: 1200,
+        margin: 'auto',
+      }}>
+        Please wait
+        <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={true}
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      </div>
     )
   }
   return (
