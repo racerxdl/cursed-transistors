@@ -9,6 +9,8 @@ import {
 } from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import ProjectInfo from "./ProjectInfo";
+import {SPECIAL_START_ID} from "./api/api";
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles({
   rightContent: {
@@ -20,8 +22,6 @@ const useStyles = makeStyles({
     padding: "10px",
   }
 });
-
-const specialStartID = web3.utils.toBN('0x10000000000000000')
 
 export default function Content() {
   const classes = useStyles();
@@ -38,10 +38,12 @@ export default function Content() {
   let transistorList;
 
   const loadingBar = loading ? <LinearProgress/> : <div/>
+  const history = useHistory()
 
   if (wallet.status === "connected") {
     getEarlyAdopterSupply()
     getCommonSupply()
+    listFromWallet(wallet.account || '', 0, 1024)
     const claimAvailable = (commonSupply || 0) < 1024;
     const claimButtonMessage = (earlySupply || 0) >= 1024 ? "Claim for 1.6 FTM" : "Claim Early for 1 FTM";
     const claimButton = claimAvailable ? <Button onClick={claim}>{claimButtonMessage}</Button> :
@@ -54,6 +56,9 @@ export default function Content() {
           <Button
             onClick={() => window.open(`https://paintswap.finance/marketplace/collections/${process.env.REACT_APP_CURSED_CONTRACT}`)}
           >Collection in Paintswap</Button>
+          <Button
+            onClick={() => window.open(`https://artion.io/explore/${process.env.REACT_APP_CURSED_CONTRACT}`)}
+          >Collection in Artion</Button>
         </ButtonGroup>
         <br/>
         <br/>
@@ -65,10 +70,10 @@ export default function Content() {
           <h1>Your Transistors</h1>
           <ImageList sx={{height: 450}} cols={4} rowHeight={224}>
             {tokenArrayContentData?.map((item: any) => {
-              const idx = item.special ? `S${web3.utils.toBN(item.idx).sub(specialStartID).toString()}` : item.idx;
+              const idx = item.special ? `S${web3.utils.toBN(item.idx).sub(SPECIAL_START_ID).toString()}` : item.idx;
               return <ImageListItem
                 key={item.image}
-                onClick={() => window.open(`https://paintswap.finance/marketplace/assets/${process.env.REACT_APP_CURSED_CONTRACT}/${item.idx}`)}
+                onClick={() => history.push(`/metrics/${item.idx}`)}
                 style={{cursor: 'pointer'}}
               >
                 <img

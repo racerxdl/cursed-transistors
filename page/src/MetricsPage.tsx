@@ -1,16 +1,22 @@
 import {useParams} from 'react-router'
+import {useEffect, useState} from "react";
+import {Avatar, Box, Card, CardContent, Grid, List, ListItem, ListItemAvatar, ListItemText} from "@mui/material";
+import * as React from "react";
+import web3 from "web3";
+
 import Histogram from "./graphs/histogram";
+import paintSwapLogo from './logos/paintswap.png'
+import artionLogo from './logos/artion_white.svg'
 import {
   asHistogram, decimateHistogram,
   getTransistorData,
-  parseMetricData,
+  parseMetricData, SPECIAL_START_ID,
   transistorAttribute,
   transistorRarity,
   transistorType
 } from "./api/api";
 import {metricName, metricToTransistorAttr, metricUnit} from "./api/metricNames";
-import {useEffect, useState} from "react";
-import {Avatar, Card, CardContent, Grid, List, ListItem, ListItemAvatar, ListItemText} from "@mui/material";
+import {toNotationUnit} from "./tools";
 
 const markWithTransistor = (m: HistogramData, hm: HistogramMetric, transistorData: TransistorData | null) => {
   let mark;
@@ -22,22 +28,24 @@ const markWithTransistor = (m: HistogramData, hm: HistogramMetric, transistorDat
     mark = transistorAttribute(transistorData, metricToTransistorAttr[m.name])
   }
 
-  return <Card sx={{minWidth: 275, margin: 1}}>
-    <CardContent>
-      <Histogram
-        title={`${hm.labels.type} - ${metricName[m.name]}`}
-        yLabel={"# Transistors"}
-        data={{
-          ...hm,
-          buckets: decimateHistogram(hm.buckets)
-        }}
-        width={420}
-        height={180}
-        mark={mark}
-        xLabel={metricUnit[m.name]}
-      />
-    </CardContent>
-  </Card>
+  return <Grid item>
+    <Card sx={{minWidth: 275}}>
+      <CardContent>
+        <Histogram
+          title={`${hm.labels.type} - ${metricName[m.name]}`}
+          yLabel={"# Transistors"}
+          data={{
+            ...hm,
+            buckets: decimateHistogram(hm.buckets)
+          }}
+          width={420}
+          height={206}
+          mark={mark}
+          xLabel={metricUnit[m.name]}
+        />
+      </CardContent>
+    </Card>
+  </Grid>
 }
 
 export default function MetricsPage({metrics}: { metrics?: Array<Metric> }) {
@@ -63,8 +71,13 @@ export default function MetricsPage({metrics}: { metrics?: Array<Metric> }) {
   let transistorContent = (<div>{metricView}</div>)
 
   if (transistorData) {
+    const sid = web3.utils.toBN(id).sub(SPECIAL_START_ID);
+    const isSpecial = sid.gt(web3.utils.toBN('0x0'));
+    const idx = isSpecial ? `S${sid.toString()}` : id;
     const rarityData = transistorRarity(transistorData, parsedMetrics)
     const rarityList = rarityData.map((m) => {
+      const [v, u] = toNotationUnit(m.value);
+      const svalue = m.unit !== 'ns' ? `${v} ${u}${metricUnit[m.metricName]}` : `${m.value} ${m.unit}`
       return (
         <ListItem>
           <ListItemAvatar>
@@ -73,7 +86,7 @@ export default function MetricsPage({metrics}: { metrics?: Array<Metric> }) {
             </Avatar>
           </ListItemAvatar>
           <ListItemText primaryTypographyProps={{style: {color: 'white'}}}
-                        primary={m.attrName}
+                        primary={`${m.attrName} = ${svalue}`}
                         secondary={`(${m.count}/${m.totalCount}) ${Math.round(m.rate * 100) / 100} %`}
           />
         </ListItem>
@@ -81,21 +94,39 @@ export default function MetricsPage({metrics}: { metrics?: Array<Metric> }) {
     })
 
     transistorContent = (
-      <Grid container spacing={1}>
+      <Grid container spacing={1} marginTop={1}>
         <Grid item xs/>
         <Grid item xs={5}>
-          <br/>
-          <img alt={transistorData.name} src={transistorData.image} style={{maxWidth: '48vh'}}/>
-          <br/>
-          <br/>
-          <List sx={{bgcolor: 'background.paper'}}>
-            <ListItem>
-              <h3 style={{color: "white"}}>{`Transistor: ${transistorData.name} #${id}`}</h3>
-            </ListItem>
-            {rarityList}
-          </List>
+          <img alt={transistorData.name} src={transistorData.image} style={{maxWidth: '100%'}}/>
+          <Box sx={{bgcolor: 'background.paper'}} borderRadius={2}>
+            <List>
+              <ListItem style={{textAlign: 'center'}}>
+                <h3 style={{color: "white", width: '100%'}}>{`${transistorData.name} # ${idx}`}</h3>
+              </ListItem>
+              {rarityList}
+              <ListItem>
+                <ListItemAvatar>
+                  <img src={artionLogo} alt="artion logo" width='32'/>
+                </ListItemAvatar>
+                <a href={`https://artion.io/explore/${process.env.REACT_APP_CURSED_CONTRACT}/${id}`}><h3
+                  style={{color: "white"}}>Trade & Sell in Artion</h3></a>
+              </ListItem>
+              <ListItem>
+                <ListItemAvatar>
+                  <img src={paintSwapLogo} alt="paintswap logo" width='32'/>
+                </ListItemAvatar>
+                <a href={`https://paintswap.finance/marketplace/assets/${process.env.REACT_APP_CURSED_CONTRACT}/${id}`}>
+                  <h3
+                    style={{color: "white"}}>Trade & Sell in Paintswap</h3></a>
+              </ListItem>
+            </List>
+          </Box>
         </Grid>
-        <Grid item xs={5}>{metricView}</Grid>
+        <Grid item xs={5}>
+          <Grid container spacing={1}>
+            {metricView}
+          </Grid>
+        </Grid>
         <Grid item xs/>
       </Grid>
     )
@@ -105,6 +136,8 @@ export default function MetricsPage({metrics}: { metrics?: Array<Metric> }) {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
+      maxWidth: 1200,
+      margin: 'auto',
     }}>
       {transistorContent}
     </div>

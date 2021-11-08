@@ -1,11 +1,13 @@
 import {transistorAttrToMetric} from "./metricNames";
+import web3 from "web3";
 
 const apiUrl = process.env.REACT_APP_API_URL;
 
 const TYPE_COUNTER = 'COUNTER'
 const TYPE_HISTOGRAM = 'HISTOGRAM'
-const HISTOGRAM_DECIMATION = 4
-const HISTOGRAM_MIN_BUCKET_TO_DECIMATE = 32
+const HISTOGRAM_DECIMATION = 3
+const HISTOGRAM_MIN_BUCKET_TO_DECIMATE = 16
+const SPECIAL_START_ID = web3.utils.toBN('0x10000000000000000')
 
 const getTokenData = async ({uri, idx}: any): Promise<any | null> => {
   try {
@@ -90,8 +92,46 @@ const transistorAttribute = (t: TransistorData, name: string): number => {
   return 0
 }
 
+const trimHistogram = (buckets: StringMap): StringMap => {
+  const result: StringMap = {}
+  const orderedBucket = Object
+    .keys(buckets)
+    .map((k) => ({
+      ok: k,
+      k: parseFloat(k),
+      v: buckets[k],
+      dv: 0,
+      fv: parseFloat(buckets[k])
+    }))
+    .sort((a, b) => (a.k - b.k))
+
+  orderedBucket.forEach((_, idx) => {
+    if (idx > 0) {
+      orderedBucket[idx].dv = orderedBucket[idx].fv - orderedBucket[idx - 1].fv
+    }
+  })
+
+  let firstNonNullEncontered = false;
+  for (let i = orderedBucket.length - 1; i >= 0; i--) {
+    const b = orderedBucket[i];
+    if (!firstNonNullEncontered) {
+      if (b.dv !== 0) {
+        firstNonNullEncontered = true
+      }
+    }
+
+    if (firstNonNullEncontered) {
+      result[b.ok] = b.v
+    }
+  }
+
+  return result
+}
+
 const decimateHistogram = (buckets: StringMap): StringMap => {
   const result: StringMap = {}
+
+  buckets = trimHistogram(buckets);
 
   const orderedBucket = Object
     .keys(buckets)
@@ -109,7 +149,7 @@ const decimateHistogram = (buckets: StringMap): StringMap => {
 
   // Should have first and last
   const first = orderedBucket[0];
-  const last = orderedBucket[orderedBucket.length-1]
+  const last = orderedBucket[orderedBucket.length - 1]
 
   result[first.ok] = first.v
   result[last.ok] = last.v
@@ -160,18 +200,20 @@ const getBucket = (value: number, histogram?: HistogramMetric): { key: string, v
     .map((k) => ({ok: k, k: parseFloat(k), v: parseFloat(buckets[k])}))
     .sort((a, b) => (a.k - b.k))
 
-  for (let i = 0; i < orderedBucket.length ; i++) {
+  for (let i = 1; i < orderedBucket.length; i++) {
     const bucket = orderedBucket[i];
-    const nextBucket = orderedBucket[i + 1]
-    if (value >= bucket.k && value <= nextBucket.k) {
+    const previousBucket = orderedBucket[i - 1]
+    if (value <= bucket.k && value >= previousBucket.k) {
       return {
         key: bucket.ok,
-        v: nextBucket.v - bucket.v,
+        v: bucket.v - previousBucket.v,
       }
     }
   }
-
-  return
+  return {
+    key: orderedBucket[0].ok,
+    v: orderedBucket[0].v,
+  }
 }
 
 const getHistMetric = (type: string, histogram?: HistogramData): HistogramMetric | undefined => {
@@ -194,7 +236,8 @@ const transistorRarity = (t: TransistorData, m: ParsedMetric) => {
       rate: 0,
       count: 0,
       totalCount: 0,
-      unit: attr.Unit
+      unit: attr.Unit,
+      value: attr.Value
     }
 
     let hist: HistogramMetric | undefined;
@@ -229,6 +272,8 @@ export {
   TYPE_COUNTER,
   TYPE_HISTOGRAM,
   HISTOGRAM_DECIMATION,
+  SPECIAL_START_ID,
+  HISTOGRAM_MIN_BUCKET_TO_DECIMATE,
   getTokenData,
   getTransistorData,
   getMetrics,

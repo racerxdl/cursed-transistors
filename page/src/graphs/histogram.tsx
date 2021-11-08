@@ -1,5 +1,6 @@
 import {useD3} from "../hooks/useD3";
 import * as d3 from 'd3';
+import {toNotationUnit} from "../tools";
 
 interface HistogramComponentData {
   width: number
@@ -9,6 +10,11 @@ interface HistogramComponentData {
   xLabel?: string
   yLabel?: string
   mark?: number
+}
+
+const notateBucket = (k: string) : string => {
+  const [val, unit] = toNotationUnit(parseFloat(k));
+  return `${val} ${unit}`;
 }
 
 export default function Histogram({data, width, height, xLabel, yLabel, title, mark}: HistogramComponentData) {
@@ -39,7 +45,9 @@ export default function Histogram({data, width, height, xLabel, yLabel, title, m
       let max = -100000000;
       let lastValue = 0;
       let markBucket : string = "";
-      Object.keys(data.buckets).forEach((k: string) => {
+      Object.keys(data.buckets)
+        .sort((a,b) => parseFloat(a) - parseFloat(b))
+        .forEach((k: string, idx: number, lkeys: Array<string>) => {
         const nk = parseFloat(k);
         const nv = parseFloat(data.buckets[k]);
         metrics[nk] = nv - lastValue;
@@ -47,7 +55,7 @@ export default function Histogram({data, width, height, xLabel, yLabel, title, m
         keys.push(nk);
         max = Math.max(max, metrics[nk]);
         if (nk <= markVal) {
-          markBucket = k
+          markBucket = notateBucket(lkeys[idx+1])
         }
       })
 
@@ -63,7 +71,7 @@ export default function Histogram({data, width, height, xLabel, yLabel, title, m
 
       const xScale = d3.scaleBand()
         .range([0, contentWidth])
-        .domain(keys.map((k: number) => k.toString()))
+        .domain(keys.map((k: number) => notateBucket(k.toString())))
         .padding(0.2)
 
 
@@ -91,7 +99,7 @@ export default function Histogram({data, width, height, xLabel, yLabel, title, m
         .data(keys)
         .join("rect")
         .attr("class", "bar")
-        .attr("x", (d: number) => xScale(d.toString()))
+        .attr("x", (d: number) => xScale(notateBucket(d.toString())))
         .attr("y", (d: number) => yScale(metrics[d]))
         .attr("width", xScale.bandwidth())
         .attr("height", (d: number) => yScale(0) - yScale(metrics[d]))
@@ -156,10 +164,10 @@ export default function Histogram({data, width, height, xLabel, yLabel, title, m
           .attr("fill", "red")
           .attr("class", "mark-label")
           .attr("text-anchor", "middle")
-          .attr("y", 0)
+          .attr("y", -2.5)
           .attr("width", width)
-          .attr("x", (xScale(markBucket)|| 0) + xScale.bandwidth() + 4)
-          .text(`${mark}`)
+          .attr("x", (xScale(markBucket)|| 0) + xScale.bandwidth() / 2)
+          .text(notateBucket(mark.toString()))
           .attr("transform", `translate(${margin.left},${margin.top})`)
       }
     },
