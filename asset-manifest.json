@@ -5,8 +5,8 @@
     "static/js/1.2f206857.chunk.js": "/static/js/1.2f206857.chunk.js",
     "static/js/1.2f206857.chunk.js.map": "/static/js/1.2f206857.chunk.js.map",
     "main.css": "/static/css/main.4b43e7bd.chunk.css",
-    "main.js": "/static/js/main.b092a002.chunk.js",
-    "main.js.map": "/static/js/main.b092a002.chunk.js.map",
+    "main.js": "/static/js/main.ab9983b5.chunk.js",
+    "main.js.map": "/static/js/main.ab9983b5.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.22d7107a.js",
     "runtime-main.js.map": "/static/js/runtime-main.22d7107a.js.map",
     "static/js/4.7afb5c14.chunk.js": "/static/js/4.7afb5c14.chunk.js",
@@ -56,12 +56,13 @@
     "static/js/7.ec26c5ef.chunk.js.LICENSE.txt": "/static/js/7.ec26c5ef.chunk.js.LICENSE.txt",
     "static/js/8.4a5463c4.chunk.js.LICENSE.txt": "/static/js/8.4a5463c4.chunk.js.LICENSE.txt",
     "static/media/artion_white.4d5f8d34.svg": "/static/media/artion_white.4d5f8d34.svg",
+    "static/media/nftkey.8ed769cc.svg": "/static/media/nftkey.8ed769cc.svg",
     "static/media/paintswap.29b092ac.png": "/static/media/paintswap.29b092ac.png"
   },
   "entrypoints": [
     "static/js/runtime-main.22d7107a.js",
     "static/js/4.7afb5c14.chunk.js",
     "static/css/main.4b43e7bd.chunk.css",
-    "static/js/main.b092a002.chunk.js"
+    "static/js/main.ab9983b5.chunk.js"
   ]
 }
