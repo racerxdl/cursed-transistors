@@ -1,8 +1,8 @@
 {
   "maxRarity": 377.44,
   "minRarity": 282.4193548387097,
-  "avgRarity": 320.60389366681864,
-  "count": 2466,
+  "avgRarity": 320.603709338141,
+  "count": 2468,
   "transistors": {
     "1": [
       {
@@ -96213,6 +96213,53 @@
         "value": 0.2875
       }
     ],
+    "2048": [
+      {
+        "metricName": "Rarity Score",
+        "attrName": "Rarity Score",
+        "rate": -1,
+        "count": -1,
+        "totalCount": -1,
+        "unit": "",
+        "value": 325.53191489361706
+      },
+      {
+        "metricName": "vmax_histogram",
+        "attrName": "Vmax",
+        "rate": 29.132569558101473,
+        "count": 178,
+        "totalCount": 611,
+        "unit": "V",
+        "value": 672
+      },
+      {
+        "metricName": "imax_histogram",
+        "attrName": "Imax",
+        "rate": 24.386252045826513,
+        "count": 149,
+        "totalCount": 611,
+        "unit": "A",
+        "value": 58
+      },
+      {
+        "metricName": "t_histogram",
+        "attrName": "t",
+        "rate": 13.911620294599016,
+        "count": 85,
+        "totalCount": 611,
+        "unit": "ns",
+        "value": 3975
+      },
+      {
+        "metricName": "vceon_histogram",
+        "attrName": "Vce(on)",
+        "rate": 7.037643207855974,
+        "count": 43,
+        "totalCount": 611,
+        "unit": "V",
+        "value": 2.7
+      }
+    ],
     "18446744073709551616": [
       {
         "metricName": "Rarity Score",
@@ -115905,6 +115952,53 @@
         "unit": "V",
         "value": 2
       }
+    ],
+    "18446744073709552035": [
+      {
+        "metricName": "Rarity Score",
+        "attrName": "Rarity Score",
+        "rate": -1,
+        "count": -1,
+        "totalCount": -1,
+        "unit": "",
+        "value": 315.22094926350246
+      },
+      {
+        "metricName": "vmax_histogram",
+        "attrName": "Vmax",
+        "rate": 15.875613747954173,
+        "count": 97,
+        "totalCount": 611,
+        "unit": "V",
+        "value": 467
+      },
+      {
+        "metricName": "imax_histogram",
+        "attrName": "Imax",
+        "rate": 17.6759410801964,
+        "count": 108,
+        "totalCount": 611,
+        "unit": "A",
+        "value": 31
+      },
+      {
+        "metricName": "t_histogram",
+        "attrName": "t",
+        "rate": 26.841243862520457,
+        "count": 164,
+        "totalCount": 611,
+        "unit": "ns",
+        "value": 332
+      },
+      {
+        "metricName": "rdson_histogram",
+        "attrName": "RDS(on)",
+        "rate": 24.386252045826513,
+        "count": 149,
+        "totalCount": 611,
+        "unit": "R",
+        "value": 1.675
+      }
     ]
   },
   "ranking": [
@@ -119617,6 +119711,10 @@
       "score": 325.53191489361706
     },
     {
+      "idx": "2048",
+      "score": 325.53191489361706
+    },
+    {
       "idx": "18446744073709551632",
       "score": 325.53191489361706
     },
@@ -121966,6 +122064,10 @@
     },
     {
       "idx": "1057",
+      "score": 315.22094926350246
+    },
+    {
+      "idx": "18446744073709552035",
       "score": 315.22094926350246
     },
     {
