@@ -12,5 +12,5 @@ require (
 	github.com/prometheus/client_golang v1.11.1
 	github.com/prometheus/prom2json v1.3.0
 	golang.org/x/exp v0.0.0-20211008200323-95152d363a1c
-	golang.org/x/image v0.0.0-20210628002857-a66eb6448b8d
+	golang.org/x/image v0.10.0
 )
